@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style type="text/css">
+html, body {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	font-size: 12px;
+	height: 100%;
+	min-height: 100%;
+	font-family: Tahoma, Arial, Helvetica;
+}
+
+#map_canvas {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	font-size: 16px;
+}
+</style>
+
+<script src="//maps.googleapis.com/maps/api/js?v=3.25&language=ru_RU&key=AIzaSyD1WaMaVLQIMr-k_lbP105JTxkOFyFdtEE" type="text/javascript"></script>
+<script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<script type="text/javascript">
+	var address = "Шелехов, 1-й квартал, 10/1а";
+	var addresstype = "addr";
+
+	function showAddress(address) {
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode({address: address}, function (result, status) {
+		if (status != 'OK') {
+			document.getElementById("map_canvas").innerHTML = 'Адрес не найден';
+		} else {
+			var latLng = result[0].geometry.location;
+			createMap([latLng.lat(), latLng.lng()]);
+		}});
+	}
+
+	function createMap(address) {
+		var map = new DG.map('map_canvas', {
+			'center': [address[0], address[1]],
+			'zoom': 15,
+			scrollWheelZoom: false,
+			'geoclicker': true,
+			'fullscreenControl': false
+			});
+				DG.marker([address[0], address[1]]).addTo(map);
+			}
+
+		function initialize() {
+		DG.then(function () {
+			if (addresstype == 'coords') {
+				createMap(window.address);
+			} else if (addresstype == 'addr') {
+				showAddress(window.address);
+			}
+		});
+	}
+</script>
+</head>
+<body onload="initialize()">
+<div id="map_canvas"></div>
+</body>
+</html>
